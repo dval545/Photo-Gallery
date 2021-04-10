@@ -8,34 +8,48 @@
 
 import UIKit
 
-class PhotosCollectionViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+class PhotosCollectionViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIScrollViewDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        navigationController?.navigationItem.title = "Photos"
         tabBarController?.tabBar.isHidden = true
         fetchingResults()
     }
     
+    // MARK: Model
     var text: String?
     var hits: [hits] = []
-    var images: [UIImage?] = []
+    var urls = [URL]()
+    var images: [UIImage] = []
+    var page = 1
     
+    // MARK: Fetching images
+    
+    var isFetching = false
     
     func fetchingResults(){
-        let urlString = "https://pixabay.com/api/?key=20876094-2f7e1bc3e385f06c641f33dba&per_page=50&q=\(text ?? "")"
+        
+        isFetching = true
+        let urlString = "https://pixabay.com/api/?key=20876094-2f7e1bc3e385f06c641f33dba&page=\(page)&per_page=50&q=\(text ?? "")"
         
         guard let url = URL(string: urlString) else { return }
         
         let task = URLSession.shared.dataTask(with: url) { [weak self] (data, response, error) in
             guard let data = data, error == nil else{ return }
-            
+            DispatchQueue.main.async {
+                if self?.page == 1 {
+                    self?.activityIndicator.startAnimating()
+                }
+            }
             do{
                 let jsonResult = try JSONDecoder().decode(Photo.self, from: data)
                 self?.hits = jsonResult.hits
-                DispatchQueue.main.async {
+                self?.fetchingImages()
+                /*DispatchQueue.main.async {
                     self?.collectionView?.reloadData()
-                }
+                }*/
             }
             catch{
                 print(error)
@@ -43,7 +57,30 @@ class PhotosCollectionViewController: UIViewController, UICollectionViewDelegate
         }
         task.resume()
     }
+    
+    let dispatchGroup = DispatchGroup()
+    
+    func fetchingImages(){
+        for hit in hits{
+            dispatchGroup.enter()
+            
+            let task = URLSession.shared.dataTask(with: hit.largeImageURL, completionHandler: { [ weak self] data, response, error in
+                defer{
+                    self?.dispatchGroup.leave()
+                }
+                guard let data = data, error == nil else { return }
+                let retrievedImage = UIImage(data: data)
+                guard let image = retrievedImage else { return }
+                self?.images.append(image)
+            })
+            task.resume()
+        }
+        
+        dispatchGroup.notify(queue: .main, execute: { self.collectionView?.reloadData(); self.isFetching = false; self.page += 1; self.activityIndicator.stopAnimating(); self.activityIndicator.isHidden = true })
+    }
 
+
+    // MARK: Outlets
     @IBOutlet weak var collectionView: UICollectionView!{
         didSet{
             collectionView.delegate = self
@@ -51,23 +88,31 @@ class PhotosCollectionViewController: UIViewController, UICollectionViewDelegate
         }
     }
     
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    
+    
+    // MARK: Collection view methods
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return hits.count
+        return images.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageCollectionViewCell", for: indexPath) as? ImageCollectionViewCell else { return UICollectionViewCell() }
         
-        let previewURL = hits[indexPath.row].previewURL
+        let image = images[indexPath.row]
+        cell.image = image
+        
+        /*let previewURL = hits[indexPath.row].previewURL
         if cell.imageSaved == false{
             cell.activityIndicator.startAnimating()
-            let task = URLSession.shared.dataTask(with: previewURL) { data, response, error in
+            let task = URLSession.shared.dataTask(with: previewURL) { [weak self] data, response, error in
                 guard let data = data, error == nil else { return }
                 DispatchQueue.main.async {
                     let retrievedImage = UIImage(data: data)
                     guard let image = retrievedImage else { return }
                     cell.image = image
-                    self.save(with: image, at: indexPath.row)
+                    self?.images.append(image)
+                    self?.save(with: image, at: indexPath.row)
                     cell.activityIndicator.stopAnimating()
                     cell.activityIndicator.isHidden = true
                     cell.imageSaved = true
@@ -76,8 +121,7 @@ class PhotosCollectionViewController: UIViewController, UICollectionViewDelegate
             task.resume()
         } else {
             cell.image = load(at: indexPath.row)
-        }
-        
+        }*/
         return cell
     }
     
@@ -111,8 +155,19 @@ class PhotosCollectionViewController: UIViewController, UICollectionViewDelegate
         flowLayout.invalidateLayout()
     }
     
+    //Pagination
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let position = scrollView.contentOffset.y
+        if position > (collectionView.contentSize.height - 100 - scrollView.frame.size.height){
+            if isFetching == false{
+                fetchingResults()
+            }
+        }
+    }
+    
+    // MARK: Caching images
     //Saving images in cache
-    func save(with image: UIImage, at indexPathRow: Int){
+    /*func save(with image: UIImage, at indexPathRow: Int){
         let dataSaved = UIImagePNGRepresentation(image)
         guard let data = dataSaved else { return }
         let imageData = ImageData(data: data)
@@ -124,16 +179,16 @@ class PhotosCollectionViewController: UIViewController, UICollectionViewDelegate
                 create: true).appendingPathComponent("Image\(indexPathRow).json"){
                 do{
                     try json.write(to: url)
-                    print("Saved succesfully")
+                    print("Saved succesfully \(indexPathRow)")
                 }catch let error{
                     print("couldn't save \(error)")
                 }
             }
         }
-    }
+    }*/
     
     //Loading images from cache
-    func load(at indexPathRow: Int) -> UIImage?{
+    /*func load(at indexPathRow: Int) -> UIImage?{
         if let url = try? FileManager.default.url(
             for: .cachesDirectory,
             in: .userDomainMask,
@@ -151,22 +206,24 @@ class PhotosCollectionViewController: UIViewController, UICollectionViewDelegate
             }
         }
         return nil
-    }
+    }*/
     
-    
-    
-
-    
-    
-
-    /*
     // MARK: - Navigation
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        if segue.identifier == "PhotoSegue"{
+            let cell = sender as! ImageCollectionViewCell
+            //guard let image = cell.image else { return }
+            let indexPath = collectionView.indexPath(for: cell)
+            guard let index = indexPath?.item else { return }
+            
+            let photosPageVC = segue.destination as? PhotosPageViewController
+            photosPageVC?.hits = hits
+            photosPageVC?.index = index
+            photosPageVC?.images = images
+            photosPageVC?.urls = urls
+        }
     }
-    */
+    
 
 }

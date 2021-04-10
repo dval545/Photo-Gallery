@@ -13,8 +13,6 @@ class ImageCollectionViewCell: UICollectionViewCell {
     
     
     @IBOutlet weak var imageView: UIImageView!
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-    
     
     //Seting image property of imageView
     var image: UIImage?{

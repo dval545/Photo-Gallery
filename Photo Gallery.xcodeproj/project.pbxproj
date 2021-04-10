@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2427524D261A2CED00667606 /* PhotosPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2427524C261A2CED00667606 /* PhotosPageViewController.swift */; };
 		2458A583260E1A1D001A27D0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2458A582260E1A1D001A27D0 /* AppDelegate.swift */; };
 		2458A585260E1A1D001A27D0 /* SearchPhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2458A584260E1A1D001A27D0 /* SearchPhotoViewController.swift */; };
 		2458A588260E1A1D001A27D0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2458A586260E1A1D001A27D0 /* Main.storyboard */; };
@@ -16,9 +17,11 @@
 		2458A59D260E3137001A27D0 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2458A59C260E3137001A27D0 /* Photo.swift */; };
 		2464B1BA260FB573008FA256 /* PhotosCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2464B1B9260FB573008FA256 /* PhotosCollectionViewController.swift */; };
 		2464B1BC260FB5D2008FA256 /* ImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2464B1BB260FB5D2008FA256 /* ImageCollectionViewCell.swift */; };
+		24CD57BA26136BEF00DE6FA1 /* PhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24CD57B926136BEF00DE6FA1 /* PhotoViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2427524C261A2CED00667606 /* PhotosPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosPageViewController.swift; sourceTree = "<group>"; };
 		2458A57F260E1A1D001A27D0 /* Photo Gallery.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Photo Gallery.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2458A582260E1A1D001A27D0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2458A584260E1A1D001A27D0 /* SearchPhotoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPhotoViewController.swift; sourceTree = "<group>"; };
@@ -30,6 +33,7 @@
 		2458A59C260E3137001A27D0 /* Photo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
 		2464B1B9260FB573008FA256 /* PhotosCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosCollectionViewController.swift; sourceTree = "<group>"; };
 		2464B1BB260FB5D2008FA256 /* ImageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCollectionViewCell.swift; sourceTree = "<group>"; };
+		24CD57B926136BEF00DE6FA1 /* PhotoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +68,8 @@
 			children = (
 				2458A584260E1A1D001A27D0 /* SearchPhotoViewController.swift */,
 				2464B1B9260FB573008FA256 /* PhotosCollectionViewController.swift */,
+				2427524C261A2CED00667606 /* PhotosPageViewController.swift */,
+				24CD57B926136BEF00DE6FA1 /* PhotoViewController.swift */,
 				2464B1BB260FB5D2008FA256 /* ImageCollectionViewCell.swift */,
 				2458A596260E1DDA001A27D0 /* CategoriesTableViewController.swift */,
 				2458A59C260E3137001A27D0 /* Photo.swift */,
@@ -150,8 +156,10 @@
 			files = (
 				2458A59D260E3137001A27D0 /* Photo.swift in Sources */,
 				2458A597260E1DDA001A27D0 /* CategoriesTableViewController.swift in Sources */,
+				2427524D261A2CED00667606 /* PhotosPageViewController.swift in Sources */,
 				2464B1BC260FB5D2008FA256 /* ImageCollectionViewCell.swift in Sources */,
 				2464B1BA260FB573008FA256 /* PhotosCollectionViewController.swift in Sources */,
+				24CD57BA26136BEF00DE6FA1 /* PhotoViewController.swift in Sources */,
 				2458A585260E1A1D001A27D0 /* SearchPhotoViewController.swift in Sources */,
 				2458A583260E1A1D001A27D0 /* AppDelegate.swift in Sources */,
 			);

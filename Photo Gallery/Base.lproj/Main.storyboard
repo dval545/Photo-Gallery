@@ -33,7 +33,7 @@
                                 </connections>
                             </button>
                         </subviews>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <navigationItem key="navigationItem" id="ds1-bT-TB4"/>
@@ -91,6 +91,10 @@
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
+                                <activityIndicatorView key="backgroundView" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" id="Ztf-Dr-T17">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="455"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                </activityIndicatorView>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ImageCollectionViewCell" id="YpZ-xK-6D9" customClass="ImageCollectionViewCell" customModule="Photo_Gallery" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
@@ -102,22 +106,17 @@
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Tz5-lI-cPX">
                                                     <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                 </imageView>
-                                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="OIk-mZ-PAV">
-                                                    <rect key="frame" x="15" y="15" width="20" height="20"/>
-                                                </activityIndicatorView>
                                             </subviews>
                                         </view>
                                         <constraints>
-                                            <constraint firstItem="OIk-mZ-PAV" firstAttribute="centerY" secondItem="YpZ-xK-6D9" secondAttribute="centerY" id="5AV-mF-xpK"/>
-                                            <constraint firstItem="OIk-mZ-PAV" firstAttribute="centerX" secondItem="YpZ-xK-6D9" secondAttribute="centerX" id="Bxp-ab-aW4"/>
                                             <constraint firstItem="Tz5-lI-cPX" firstAttribute="top" secondItem="YpZ-xK-6D9" secondAttribute="top" id="EBg-3U-d2n"/>
                                             <constraint firstAttribute="bottom" secondItem="Tz5-lI-cPX" secondAttribute="bottom" id="bqo-Oz-lMb"/>
                                             <constraint firstAttribute="trailing" secondItem="Tz5-lI-cPX" secondAttribute="trailing" id="eqg-CU-3CS"/>
                                             <constraint firstItem="Tz5-lI-cPX" firstAttribute="leading" secondItem="YpZ-xK-6D9" secondAttribute="leading" id="pnd-Kc-sVL"/>
                                         </constraints>
                                         <connections>
-                                            <outlet property="activityIndicator" destination="OIk-mZ-PAV" id="SIt-uC-bjN"/>
                                             <outlet property="imageView" destination="Tz5-lI-cPX" id="6LA-aB-aEV"/>
+                                            <segue destination="XLg-i2-DKw" kind="show" identifier="PhotoSegue" id="IHE-Js-gkA"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
@@ -133,12 +132,21 @@
                         <viewLayoutGuide key="safeArea" id="H8G-il-ajH"/>
                     </view>
                     <connections>
+                        <outlet property="activityIndicator" destination="Ztf-Dr-T17" id="kSB-xl-2k0"/>
                         <outlet property="collectionView" destination="cjZ-Us-uyA" id="R5M-Uc-EjL"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cnT-S0-pBH" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1954" y="483"/>
+        </scene>
+        <!--Photos Page View Controller-->
+        <scene sceneID="w1D-94-JQ1">
+            <objects>
+                <pageViewController autoresizesArchivedViewToFullSize="NO" transitionStyle="scroll" pageSpacing="2" navigationOrientation="horizontal" spineLocation="none" id="XLg-i2-DKw" customClass="PhotosPageViewController" customModule="Photo_Gallery" customModuleProvider="target" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="33V-ID-FEr" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2730" y="483"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="Bi7-WL-b2c">
