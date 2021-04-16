@@ -8,12 +8,16 @@
 
 import UIKit
 
-class PhotosPageViewController: UIPageViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate, UIScrollViewDelegate {
+class PhotosPageViewController: UIPageViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate, UINavigationControllerDelegate{
 
     override func viewDidLoad() {
         super.viewDidLoad()
         self.delegate = self
         self.dataSource = self
+        navigationController?.delegate = self
+        
+        navigationController?.navigationItem.title = text ?? ""
+        navigationController?.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(dismissSelf))
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -22,19 +26,73 @@ class PhotosPageViewController: UIPageViewController, UIPageViewControllerDataSo
         DispatchQueue.main.asyncAfter(deadline: .now()+0.5, execute: { self.addingVCs() })
     }
     
+    
+    
     var hits: [hits] = []
-    var urls = [URL]()
-    var url: URL?
+    var text: String?
+    var order: String?
+    var orientation: String?
+    var page: Int?
     var images = [UIImage]()
     var index: Int?
-    var currentVCIndex: Int?
     var photoVC = [PhotoViewController]()
+
+    func fetchingResults(){
+        
+        let urlString = "https://pixabay.com/api/?key=20876094-2f7e1bc3e385f06c641f33dba&orientation=\(orientation ?? "all")&order=\(order ?? "popular")&page=\(page ?? 1)&per_page=50&q=\(text ?? "")"
+        
+        guard let url = URL(string: urlString) else { return }
+        
+        let task = URLSession.shared.dataTask(with: url) { [weak self] (data, response, error) in
+            guard let data = data, error == nil else{ return }
+            do{
+                let jsonResult = try JSONDecoder().decode(Photo.self, from: data)
+                self?.hits = jsonResult.hits
+                self?.fetchingImages()
+                /*DispatchQueue.main.async {
+                 self?.collectionView?.reloadData()
+                 }*/
+            }
+            catch{
+                print(error)
+            }
+        }
+        task.resume()
+    }
+    
+    let dispatchGroup = DispatchGroup()
+    
+    func fetchingImages(){
+        var newImages = [UIImage]()
+        for hit in hits{
+            dispatchGroup.enter()
+            
+            let task = URLSession.shared.dataTask(with: hit.largeImageURL, completionHandler: { [ weak self] data, response, error in
+                defer{
+                    self?.dispatchGroup.leave()
+                }
+                guard let data = data, error == nil else { return }
+                let retrievedImage = UIImage(data: data)
+                guard let image = retrievedImage else { return }
+                newImages.append(image)
+            })
+            task.resume()
+        }
+        
+        dispatchGroup.notify(queue: .main, execute: { self.images += newImages; self.addingVCs(); self.page? += 1 })
+    }
+
     
     func addingVCs(){
+        photoVC.removeAll()
         for image in images{
             let vc = PhotoViewController(whit: image)
             photoVC.append(vc)
         }
+        let vc = PhotoViewController()
+        vc.activityIndicator.isHidden = false
+        vc.activityIndicator.startAnimating()
+        photoVC.append(vc)
         presentVC()
     }
     
@@ -42,34 +100,47 @@ class PhotosPageViewController: UIPageViewController, UIPageViewControllerDataSo
         guard let index = index else { return }
         let vc = photoVC[index]
         self.setViewControllers([vc], direction: .forward, animated: true, completion: nil)
+        
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
+        
         guard let index = photoVC.index(of: viewController as! PhotoViewController), index > 0 else { return nil }
         let before = index - 1
         
-        currentVCIndex = before
         return photoVC[before]
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
-        guard let index = photoVC.index(of: viewController as! PhotoViewController), index < photoVC.count - 1 else { return nil }
+        
+        guard let index = photoVC.index(of: viewController as! PhotoViewController), index < photoVC.count - 1 else {
+           return nil
+        }
+    
         
         let after = index + 1
-        currentVCIndex = after
+        
+        if after == photoVC.count - 1{
+            fetchingResults()
+        }
+        
+        self.index = after
         return photoVC[after]
     }
-
-    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
-        guard let index = currentVCIndex else { return nil }
-        scrollView.minimumZoomScale = 1.0
-        scrollView.maximumZoomScale = 5.0
-        scrollView.delegate = self
-        scrollView.addSubview(photoVC[index].imageView)
-        return photoVC[index].imageView
+    
+    func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
+        let photosCollectionVC = viewController as? PhotosCollectionViewController
+        photosCollectionVC?.images = images
+        photosCollectionVC?.page = page!
+        photosCollectionVC?.recivedIndex = index!
+        photosCollectionVC?.scrolledToIndex = false
+        photosCollectionVC?.collectionView.reloadData()
+    }
+    
+    @objc func dismissSelf(){
+        dismiss(animated: true, completion: nil)
     }
 
-    
     
     /*
     // MARK: - Navigation

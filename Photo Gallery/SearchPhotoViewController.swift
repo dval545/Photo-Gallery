@@ -20,13 +20,30 @@ class SearchPhotoViewController: UIViewController, UITextFieldDelegate {
 
     
     @IBOutlet weak var searchTextField: UITextField!
+
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        let vc = storyboard?.instantiateViewController(withIdentifier: "PCVC") as! PhotosCollectionViewController
+        vc.text = searchTextField.text ?? ""
+        show(vc, sender: textField)
+        return true
+    }
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+        searchTextField.text = ""
+        tabBarController?.tabBar.isHidden = false
+        navigationController?.navigationBar.isHidden = true
+    }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "SearchSegue"{
             let PCVC = segue.destination as? PhotosCollectionViewController
             
             PCVC?.text = searchTextField.text ?? ""
-        }
+            
+        } 
+        
     }
     
 }

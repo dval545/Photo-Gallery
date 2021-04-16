@@ -14,16 +14,20 @@ class PhotosCollectionViewController: UIViewController, UICollectionViewDelegate
         super.viewDidLoad()
         
         navigationController?.navigationItem.title = "Photos"
+        navigationController?.navigationBar.isHidden = false
         tabBarController?.tabBar.isHidden = true
+        
         fetchingResults()
     }
     
     // MARK: Model
     var text: String?
     var hits: [hits] = []
-    var urls = [URL]()
     var images: [UIImage] = []
     var page = 1
+    var recivedIndex: Int?
+    var order = "popular"
+    var orientation = "all"
     
     // MARK: Fetching images
     
@@ -32,7 +36,7 @@ class PhotosCollectionViewController: UIViewController, UICollectionViewDelegate
     func fetchingResults(){
         
         isFetching = true
-        let urlString = "https://pixabay.com/api/?key=20876094-2f7e1bc3e385f06c641f33dba&page=\(page)&per_page=50&q=\(text ?? "")"
+        let urlString = "https://pixabay.com/api/?key=20876094-2f7e1bc3e385f06c641f33dba&orientation=\(orientation)&order=\(order)&page=\(page)&per_page=50&q=\(text ?? "")"
         
         guard let url = URL(string: urlString) else { return }
         
@@ -40,8 +44,12 @@ class PhotosCollectionViewController: UIViewController, UICollectionViewDelegate
             guard let data = data, error == nil else{ return }
             DispatchQueue.main.async {
                 if self?.page == 1 {
+                    self?.activityIndicator.isHidden = false
                     self?.activityIndicator.startAnimating()
-                }
+                } /*else if (self?.page)! > 1 {
+                    self?.paginationActivityIndicator.isHidden = false
+                    self?.paginationActivityIndicator.startAnimating()
+                }*/
             }
             do{
                 let jsonResult = try JSONDecoder().decode(Photo.self, from: data)
@@ -61,6 +69,7 @@ class PhotosCollectionViewController: UIViewController, UICollectionViewDelegate
     let dispatchGroup = DispatchGroup()
     
     func fetchingImages(){
+        var newImages = [UIImage]()
         for hit in hits{
             dispatchGroup.enter()
             
@@ -71,12 +80,12 @@ class PhotosCollectionViewController: UIViewController, UICollectionViewDelegate
                 guard let data = data, error == nil else { return }
                 let retrievedImage = UIImage(data: data)
                 guard let image = retrievedImage else { return }
-                self?.images.append(image)
+                newImages.append(image)
             })
             task.resume()
         }
         
-        dispatchGroup.notify(queue: .main, execute: { self.collectionView?.reloadData(); self.isFetching = false; self.page += 1; self.activityIndicator.stopAnimating(); self.activityIndicator.isHidden = true })
+        dispatchGroup.notify(queue: .main, execute: {self.images += newImages ;  self.collectionView?.reloadData(); self.isFetching = false; self.page += 1; self.activityIndicator.stopAnimating(); self.activityIndicator.isHidden = true })
     }
 
 
@@ -149,6 +158,35 @@ class PhotosCollectionViewController: UIViewController, UICollectionViewDelegate
         }
     }
     
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        let footer = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionElementKindSectionFooter, withReuseIdentifier: "FooterCollectionReusableView", for: indexPath) as! FooterCollectionReusableView
+        if page > 1 {
+            footer.activityIndicator?.isHidden = false 
+            footer.activityIndicator?.startAnimating()
+        } else {
+            footer.activityIndicator?.stopAnimating()
+            footer.activityIndicator?.isHidden = true
+        }
+        
+        return footer
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+        return CGSize(width: view.frame.size.width, height: 100)
+    }
+    
+    var scrolledToIndex = false
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        guard let index = recivedIndex else { return }
+        if index < images.count{
+            if !scrolledToIndex{
+                let indexToScrollTo = IndexPath(item: index, section: 0)
+                self.collectionView.scrollToItem(at: indexToScrollTo, at: .bottom, animated: false)
+                scrolledToIndex = true
+            }
+        }
+    }
+    
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         guard let flowLayout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout else { return }
@@ -156,14 +194,18 @@ class PhotosCollectionViewController: UIViewController, UICollectionViewDelegate
     }
     
     //Pagination
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    func scrollViewDidScroll(_ scrollView: UIScrollView){
         let position = scrollView.contentOffset.y
         if position > (collectionView.contentSize.height - 100 - scrollView.frame.size.height){
             if isFetching == false{
+                activityIndicator.frame = CGRect(x: 0, y: 0, width: view.frame.size.width, height: 100)
+                activityIndicator.center = collectionView.center
+                activityIndicator.startAnimating()
                 fetchingResults()
             }
         }
     }
+    
     
     // MARK: Caching images
     //Saving images in cache
@@ -221,8 +263,31 @@ class PhotosCollectionViewController: UIViewController, UICollectionViewDelegate
             photosPageVC?.hits = hits
             photosPageVC?.index = index
             photosPageVC?.images = images
-            photosPageVC?.urls = urls
+            photosPageVC?.text = text
+            photosPageVC?.order = order
+            photosPageVC?.orientation = orientation
+            photosPageVC?.page = page 
+        } else if segue.identifier == "FilterSegue"{
+            let filterTableViewController = segue.destination as? FilterTableViewController
+            
+            filterTableViewController?.order = order
+            filterTableViewController?.orientation = orientation
         }
+    }
+    
+    @IBAction func unwindToPhotosCollectionViewController(segue: UIStoryboardSegue){
+        if segue.identifier == "Done"{
+            let filterTableViewController = segue.source as! FilterTableViewController
+            
+            order = filterTableViewController.order
+            orientation = filterTableViewController.orientation
+            page = filterTableViewController.page
+            hits.removeAll()
+            images.removeAll()
+            collectionView.reloadData()
+            fetchingResults()
+            
+        } 
     }
     
 
