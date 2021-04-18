@@ -20,7 +20,7 @@ class PhotosCollectionViewController: UIViewController, UICollectionViewDelegate
         fetchingResults()
     }
     
-    // MARK: Model
+    // MARK: - Model
     var text: String?
     var hits: [hits] = []
     var images: [UIImage] = []
@@ -29,14 +29,14 @@ class PhotosCollectionViewController: UIViewController, UICollectionViewDelegate
     var order = "popular"
     var orientation = "all"
     
-    // MARK: Fetching images
+    // MARK: - Fetching images
     
     var isFetching = false
     
     func fetchingResults(){
         
         isFetching = true
-        let urlString = "https://pixabay.com/api/?key=20876094-2f7e1bc3e385f06c641f33dba&orientation=\(orientation)&order=\(order)&page=\(page)&per_page=50&q=\(text ?? "")"
+        let urlString = "https://pixabay.com/api/?key=20876094-2f7e1bc3e385f06c641f33dba&orientation=\(orientation)&order=\(order)&safesearch=true&page=\(page)&per_page=50&q=\(text ?? "")"
         
         guard let url = URL(string: urlString) else { return }
         
@@ -46,18 +46,12 @@ class PhotosCollectionViewController: UIViewController, UICollectionViewDelegate
                 if self?.page == 1 {
                     self?.activityIndicator.isHidden = false
                     self?.activityIndicator.startAnimating()
-                } /*else if (self?.page)! > 1 {
-                    self?.paginationActivityIndicator.isHidden = false
-                    self?.paginationActivityIndicator.startAnimating()
-                }*/
+                }
             }
             do{
                 let jsonResult = try JSONDecoder().decode(Photo.self, from: data)
                 self?.hits = jsonResult.hits
                 self?.fetchingImages()
-                /*DispatchQueue.main.async {
-                    self?.collectionView?.reloadData()
-                }*/
             }
             catch{
                 print(error)
@@ -89,7 +83,7 @@ class PhotosCollectionViewController: UIViewController, UICollectionViewDelegate
     }
 
 
-    // MARK: Outlets
+    // MARK: - Outlets
     @IBOutlet weak var collectionView: UICollectionView!{
         didSet{
             collectionView.delegate = self
@@ -100,7 +94,7 @@ class PhotosCollectionViewController: UIViewController, UICollectionViewDelegate
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     
-    // MARK: Collection view methods
+    // MARK: - Collection view methods
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return images.count
     }
@@ -111,26 +105,6 @@ class PhotosCollectionViewController: UIViewController, UICollectionViewDelegate
         let image = images[indexPath.row]
         cell.image = image
         
-        /*let previewURL = hits[indexPath.row].previewURL
-        if cell.imageSaved == false{
-            cell.activityIndicator.startAnimating()
-            let task = URLSession.shared.dataTask(with: previewURL) { [weak self] data, response, error in
-                guard let data = data, error == nil else { return }
-                DispatchQueue.main.async {
-                    let retrievedImage = UIImage(data: data)
-                    guard let image = retrievedImage else { return }
-                    cell.image = image
-                    self?.images.append(image)
-                    self?.save(with: image, at: indexPath.row)
-                    cell.activityIndicator.stopAnimating()
-                    cell.activityIndicator.isHidden = true
-                    cell.imageSaved = true
-                }
-            }
-            task.resume()
-        } else {
-            cell.image = load(at: indexPath.row)
-        }*/
         return cell
     }
     
@@ -193,62 +167,15 @@ class PhotosCollectionViewController: UIViewController, UICollectionViewDelegate
         flowLayout.invalidateLayout()
     }
     
-    //Pagination
+    // MARK: -  Pagination (infinite scroll)
     func scrollViewDidScroll(_ scrollView: UIScrollView){
         let position = scrollView.contentOffset.y
         if position > (collectionView.contentSize.height - 100 - scrollView.frame.size.height){
             if isFetching == false{
-                activityIndicator.frame = CGRect(x: 0, y: 0, width: view.frame.size.width, height: 100)
-                activityIndicator.center = collectionView.center
-                activityIndicator.startAnimating()
                 fetchingResults()
             }
         }
     }
-    
-    
-    // MARK: Caching images
-    //Saving images in cache
-    /*func save(with image: UIImage, at indexPathRow: Int){
-        let dataSaved = UIImagePNGRepresentation(image)
-        guard let data = dataSaved else { return }
-        let imageData = ImageData(data: data)
-        if let json = imageData.json{
-            if let url = try? FileManager.default.url(
-                for: .cachesDirectory,
-                in: .userDomainMask,
-                appropriateFor: nil,
-                create: true).appendingPathComponent("Image\(indexPathRow).json"){
-                do{
-                    try json.write(to: url)
-                    print("Saved succesfully \(indexPathRow)")
-                }catch let error{
-                    print("couldn't save \(error)")
-                }
-            }
-        }
-    }*/
-    
-    //Loading images from cache
-    /*func load(at indexPathRow: Int) -> UIImage?{
-        if let url = try? FileManager.default.url(
-            for: .cachesDirectory,
-            in: .userDomainMask,
-            appropriateFor: nil,
-            create: true).appendingPathComponent("Image\(indexPathRow).json"){
-            if let jsonData = try? Data(contentsOf: url){
-                let imageData = ImageData(json: jsonData)
-                guard let retrievedData = imageData?.data else { return nil }
-                let retrievedImage = UIImage(data: retrievedData)
-                guard let image = retrievedImage else { return nil }
-                print("Loaded")
-                return image
-            }else{
-                print("Not loaded")
-            }
-        }
-        return nil
-    }*/
     
     // MARK: - Navigation
 

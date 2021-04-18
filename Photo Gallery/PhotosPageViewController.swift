@@ -16,8 +16,7 @@ class PhotosPageViewController: UIPageViewController, UIPageViewControllerDataSo
         self.dataSource = self
         navigationController?.delegate = self
         
-        navigationController?.navigationItem.title = text ?? ""
-        navigationController?.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(dismissSelf))
+        navigationItem.title = text ?? ""
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -27,7 +26,7 @@ class PhotosPageViewController: UIPageViewController, UIPageViewControllerDataSo
     }
     
     
-    
+    // MARK: - Model
     var hits: [hits] = []
     var text: String?
     var order: String?
@@ -37,6 +36,7 @@ class PhotosPageViewController: UIPageViewController, UIPageViewControllerDataSo
     var index: Int?
     var photoVC = [PhotoViewController]()
 
+    //MARK: - Fetching images
     func fetchingResults(){
         
         let urlString = "https://pixabay.com/api/?key=20876094-2f7e1bc3e385f06c641f33dba&orientation=\(orientation ?? "all")&order=\(order ?? "popular")&page=\(page ?? 1)&per_page=50&q=\(text ?? "")"
@@ -82,7 +82,7 @@ class PhotosPageViewController: UIPageViewController, UIPageViewControllerDataSo
         dispatchGroup.notify(queue: .main, execute: { self.images += newImages; self.addingVCs(); self.page? += 1 })
     }
 
-    
+    // MARK: - Adding and presenting VCs
     func addingVCs(){
         photoVC.removeAll()
         for image in images{
@@ -103,6 +103,8 @@ class PhotosPageViewController: UIPageViewController, UIPageViewControllerDataSo
         
     }
     
+    
+    // MARK: - PageViewController methods
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
         
         guard let index = photoVC.index(of: viewController as! PhotoViewController), index > 0 else { return nil }
@@ -128,6 +130,7 @@ class PhotosPageViewController: UIPageViewController, UIPageViewControllerDataSo
         return photoVC[after]
     }
     
+    // MARK: - Navigation
     func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
         let photosCollectionVC = viewController as? PhotosCollectionViewController
         photosCollectionVC?.images = images
@@ -137,19 +140,5 @@ class PhotosPageViewController: UIPageViewController, UIPageViewControllerDataSo
         photosCollectionVC?.collectionView.reloadData()
     }
     
-    @objc func dismissSelf(){
-        dismiss(animated: true, completion: nil)
-    }
-
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

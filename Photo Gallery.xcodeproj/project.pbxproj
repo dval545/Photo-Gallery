@@ -14,12 +14,13 @@
 		2458A588260E1A1D001A27D0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2458A586260E1A1D001A27D0 /* Main.storyboard */; };
 		2458A58A260E1A1D001A27D0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2458A589260E1A1D001A27D0 /* Assets.xcassets */; };
 		2458A58D260E1A1D001A27D0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2458A58B260E1A1D001A27D0 /* LaunchScreen.storyboard */; };
-		2458A597260E1DDA001A27D0 /* CategoriesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2458A596260E1DDA001A27D0 /* CategoriesTableViewController.swift */; };
 		2458A59D260E3137001A27D0 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2458A59C260E3137001A27D0 /* Photo.swift */; };
 		2464B1BA260FB573008FA256 /* PhotosCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2464B1B9260FB573008FA256 /* PhotosCollectionViewController.swift */; };
 		2464B1BC260FB5D2008FA256 /* ImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2464B1BB260FB5D2008FA256 /* ImageCollectionViewCell.swift */; };
 		24B309602626B7F800F02A9D /* FilterTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B3095F2626B7F800F02A9D /* FilterTableViewController.swift */; };
 		24CD57BA26136BEF00DE6FA1 /* PhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24CD57B926136BEF00DE6FA1 /* PhotoViewController.swift */; };
+		24DCD939262BFF7C00A774C2 /* RecentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DCD938262BFF7C00A774C2 /* RecentsViewController.swift */; };
+		24DCD93B262C00A700A774C2 /* RecentsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DCD93A262C00A700A774C2 /* RecentsCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,12 +33,13 @@
 		2458A589260E1A1D001A27D0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2458A58C260E1A1D001A27D0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2458A58E260E1A1D001A27D0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2458A596260E1DDA001A27D0 /* CategoriesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesTableViewController.swift; sourceTree = "<group>"; };
 		2458A59C260E3137001A27D0 /* Photo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
 		2464B1B9260FB573008FA256 /* PhotosCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosCollectionViewController.swift; sourceTree = "<group>"; };
 		2464B1BB260FB5D2008FA256 /* ImageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCollectionViewCell.swift; sourceTree = "<group>"; };
 		24B3095F2626B7F800F02A9D /* FilterTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterTableViewController.swift; sourceTree = "<group>"; };
 		24CD57B926136BEF00DE6FA1 /* PhotoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewController.swift; sourceTree = "<group>"; };
+		24DCD938262BFF7C00A774C2 /* RecentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentsViewController.swift; sourceTree = "<group>"; };
+		24DCD93A262C00A700A774C2 /* RecentsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentsCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,7 +79,8 @@
 				24B3095F2626B7F800F02A9D /* FilterTableViewController.swift */,
 				24CD57B926136BEF00DE6FA1 /* PhotoViewController.swift */,
 				2464B1BB260FB5D2008FA256 /* ImageCollectionViewCell.swift */,
-				2458A596260E1DDA001A27D0 /* CategoriesTableViewController.swift */,
+				24DCD938262BFF7C00A774C2 /* RecentsViewController.swift */,
+				24DCD93A262C00A700A774C2 /* RecentsCollectionViewCell.swift */,
 				2458A59C260E3137001A27D0 /* Photo.swift */,
 				2458A586260E1A1D001A27D0 /* Main.storyboard */,
 				2458A582260E1A1D001A27D0 /* AppDelegate.swift */,
@@ -161,10 +164,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				2458A59D260E3137001A27D0 /* Photo.swift in Sources */,
-				2458A597260E1DDA001A27D0 /* CategoriesTableViewController.swift in Sources */,
 				2427524D261A2CED00667606 /* PhotosPageViewController.swift in Sources */,
+				24DCD93B262C00A700A774C2 /* RecentsCollectionViewCell.swift in Sources */,
 				24B309602626B7F800F02A9D /* FilterTableViewController.swift in Sources */,
 				2464B1BC260FB5D2008FA256 /* ImageCollectionViewCell.swift in Sources */,
+				24DCD939262BFF7C00A774C2 /* RecentsViewController.swift in Sources */,
 				242FCC362622D81F00A98FD8 /* FooterCollectionReusableView.swift in Sources */,
 				2464B1BA260FB573008FA256 /* PhotosCollectionViewController.swift in Sources */,
 				24CD57BA26136BEF00DE6FA1 /* PhotoViewController.swift in Sources */,

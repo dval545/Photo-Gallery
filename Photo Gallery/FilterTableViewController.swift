@@ -32,7 +32,6 @@ class FilterTableViewController: UITableViewController {
         }
     }
 
-
     @IBOutlet weak var popularSwicth: UISwitch!
     @IBOutlet weak var latestSwitch: UISwitch!
     @IBOutlet weak var verticalSwitch: UISwitch!

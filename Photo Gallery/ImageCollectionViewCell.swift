@@ -14,7 +14,6 @@ class ImageCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet weak var imageView: UIImageView!
     
-    //Seting image property of imageView
     var image: UIImage?{
         get{
             return imageView.image
@@ -26,7 +25,5 @@ class ImageCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    var imageSaved = false
-   
     
 }

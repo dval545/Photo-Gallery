@@ -14,30 +14,10 @@ struct Photo: Codable{
 }
 
 
-//Added persistence 
 struct hits: Codable{
     var previewURL: URL
     var largeImageURL: URL
     
 }
 
-struct ImageData: Codable{
-    var data: Data
-    
-    var json: Data?{
-        return try? JSONEncoder().encode(self)
-    }
-    
-    init?(json: Data) {
-        if let newValue = try? JSONDecoder().decode(ImageData.self, from: json){
-            self = newValue
-        } else{
-            return nil
-        }
-    }
-    
-    init(data: Data) {
-        self.data = data
-    }
-}
 
