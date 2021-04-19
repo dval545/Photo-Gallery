@@ -1,5 +1,5 @@
 //
-//  RecentsViewController.swift
+//  RecentViewController.swift
 //  Photo Gallery
 //
 //  Created by Admin1 on 18/4/21.
