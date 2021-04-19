@@ -22,6 +22,7 @@ class PhotoViewController: UIViewController {
         
     }
     
+    // MARK: - Inits
     init(whit image: UIImage) {
         super.init(nibName: nil, bundle: nil)
         self.recievedImage = image
@@ -35,8 +36,8 @@ class PhotoViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    
-    var imageView = UIImageView()
+    // MARK: - Variables
+    private var imageView = UIImageView()
     var recievedImage: UIImage?{
         get{
             return imageView.image
@@ -54,6 +55,7 @@ class PhotoViewController: UIViewController {
         return ai
     }()
     
+    // MARK: - Override methods
     override func viewWillLayoutSubviews() {
         imageView.frame.size = view.frame.size
     }
@@ -65,23 +67,12 @@ class PhotoViewController: UIViewController {
         
     }
     
-    var navBarIsHidden = false
+    // MARK: - Tap gesture action
+    private var navBarIsHidden = false
     @objc private func tapAction(sender: UITapGestureRecognizer){
         navBarIsHidden = !navBarIsHidden
         navigationController?.navigationBar.isHidden = navBarIsHidden
     }
     
-    
-    
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

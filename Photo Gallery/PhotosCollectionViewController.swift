@@ -31,9 +31,9 @@ class PhotosCollectionViewController: UIViewController, UICollectionViewDelegate
     
     // MARK: - Fetching images
     
-    var isFetching = false
+    private var isFetching = false
     
-    func fetchingResults(){
+    private func fetchingResults(){
         
         isFetching = true
         let urlString = "https://pixabay.com/api/?key=20876094-2f7e1bc3e385f06c641f33dba&orientation=\(orientation)&order=\(order)&safesearch=true&page=\(page)&per_page=50&q=\(text ?? "")"
@@ -60,9 +60,9 @@ class PhotosCollectionViewController: UIViewController, UICollectionViewDelegate
         task.resume()
     }
     
-    let dispatchGroup = DispatchGroup()
+    private let dispatchGroup = DispatchGroup()
     
-    func fetchingImages(){
+    private func fetchingImages(){
         var newImages = [UIImage]()
         for hit in hits{
             dispatchGroup.enter()
@@ -91,7 +91,7 @@ class PhotosCollectionViewController: UIViewController, UICollectionViewDelegate
         }
     }
     
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
     
     
     // MARK: - Collection view methods

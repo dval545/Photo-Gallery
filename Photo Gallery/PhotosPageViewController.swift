@@ -34,10 +34,10 @@ class PhotosPageViewController: UIPageViewController, UIPageViewControllerDataSo
     var page: Int?
     var images = [UIImage]()
     var index: Int?
-    var photoVC = [PhotoViewController]()
+    private var photoVC = [PhotoViewController]()
 
     //MARK: - Fetching images
-    func fetchingResults(){
+    private func fetchingResults(){
         
         let urlString = "https://pixabay.com/api/?key=20876094-2f7e1bc3e385f06c641f33dba&orientation=\(orientation ?? "all")&order=\(order ?? "popular")&page=\(page ?? 1)&per_page=50&q=\(text ?? "")"
         
@@ -60,9 +60,9 @@ class PhotosPageViewController: UIPageViewController, UIPageViewControllerDataSo
         task.resume()
     }
     
-    let dispatchGroup = DispatchGroup()
+    private let dispatchGroup = DispatchGroup()
     
-    func fetchingImages(){
+    private func fetchingImages(){
         var newImages = [UIImage]()
         for hit in hits{
             dispatchGroup.enter()
@@ -83,7 +83,7 @@ class PhotosPageViewController: UIPageViewController, UIPageViewControllerDataSo
     }
 
     // MARK: - Adding and presenting VCs
-    func addingVCs(){
+    private func addingVCs(){
         photoVC.removeAll()
         for image in images{
             let vc = PhotoViewController(whit: image)
@@ -96,7 +96,7 @@ class PhotosPageViewController: UIPageViewController, UIPageViewControllerDataSo
         presentVC()
     }
     
-    func presentVC(){
+    private func presentVC(){
         guard let index = index else { return }
         let vc = photoVC[index]
         self.setViewControllers([vc], direction: .forward, animated: true, completion: nil)

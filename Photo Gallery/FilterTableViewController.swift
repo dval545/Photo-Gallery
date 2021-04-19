@@ -32,16 +32,19 @@ class FilterTableViewController: UITableViewController {
         }
     }
 
-    @IBOutlet weak var popularSwicth: UISwitch!
-    @IBOutlet weak var latestSwitch: UISwitch!
-    @IBOutlet weak var verticalSwitch: UISwitch!
-    @IBOutlet weak var horizontalSwitch: UISwitch!
+    // MARK: - Outlets
+    @IBOutlet private weak var popularSwicth: UISwitch!
+    @IBOutlet private weak var latestSwitch: UISwitch!
+    @IBOutlet private weak var verticalSwitch: UISwitch!
+    @IBOutlet private weak var horizontalSwitch: UISwitch!
     
+    // MARK: - Variables
     var order = "popular"
     var orientation = "all"
     var page = 1
     
-    @IBAction func switchSelected(_ sender: UISwitch) {
+    // MARK: - IBAction
+    @IBAction private func switchSelected(_ sender: UISwitch) {
         switch sender {
         case popularSwicth:
             if popularSwicth.isOn == true{
@@ -72,6 +75,7 @@ class FilterTableViewController: UITableViewController {
         }
     }
     
+    // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
         guard segue.identifier == "Done" else { return }

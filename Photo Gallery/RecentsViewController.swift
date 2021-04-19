@@ -25,16 +25,16 @@ class RecentsViewController: UIViewController, UICollectionViewDelegate, UIColle
     }
     
     // MARK: - Model
-    var hits: [hits] = []
-    var images: [UIImage] = []
-    var verticalPage = 1
-    var horizontalPage = 1
-    var urlString: String?
-    var actualCellIndex: Int?
-    var isFetching = false
+    private var hits: [hits] = []
+    private var images: [UIImage] = []
+    private var verticalPage = 1
+    private var horizontalPage = 1
+    private var urlString: String?
+    private var actualCellIndex: Int?
+    private var isFetching = false
     
     // MARK: - Fetching images
-    func fetchingResults(){
+    private func fetchingResults(){
         
         isFetching = true
 
@@ -72,9 +72,9 @@ class RecentsViewController: UIViewController, UICollectionViewDelegate, UIColle
         task.resume()
     }
     
-    let dispatchGroup = DispatchGroup()
+    private let dispatchGroup = DispatchGroup()
     
-    func fetchingImages(){
+    private func fetchingImages(){
         var newImages = [UIImage]()
         for hit in hits{
             dispatchGroup.enter()
@@ -97,18 +97,18 @@ class RecentsViewController: UIViewController, UICollectionViewDelegate, UIColle
             horizontalPage += 1
         }
         
-        dispatchGroup.notify(queue: .main, execute: {self.images += newImages ;  self.collectionView?.reloadData(); self.isFetching = false; self.activityIndicator.stopAnimating(); self.activityIndicator.isHidden = true })
+        dispatchGroup.notify(queue: .main, execute: {self.images += newImages ;  self.collectionView?.reloadData(); self.isFetching = false; self.activityIndicator.stopAnimating(); self.activityIndicator.isHidden = true; self.collectionView.flashScrollIndicators() })
     }
 
     // MARK: - Outlets
-    @IBOutlet weak var collectionView: UICollectionView!{
+    @IBOutlet private weak var collectionView: UICollectionView!{
         didSet{
             collectionView.delegate = self
             collectionView.dataSource = self
         }
     }
     
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
     
     // MARK: - CollectionView methods
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

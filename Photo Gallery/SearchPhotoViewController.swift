@@ -19,7 +19,7 @@ class SearchPhotoViewController: UIViewController, UITextFieldDelegate {
     }
 
     
-    @IBOutlet weak var searchTextField: UITextField!
+    @IBOutlet private weak var searchTextField: UITextField!
 
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
